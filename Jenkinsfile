@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     // Windows'tan Linux'a gelince dosya izni kaybolur, onu düzeltiyoruz
-                    
+                    sh 'chmod +x mvnw'
                     // Linux olduğu için sh kullanıyoruz
                     sh './mvnw clean test'
                 }
