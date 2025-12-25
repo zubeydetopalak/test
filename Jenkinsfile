@@ -1,28 +1,31 @@
 pipeline {
     agent any
-  
 
     stages {
-        stage('Checkout') {
+        stage('Build & Test') {
             steps {
-                // Kodunuzu Git'ten çekme adımı (eğer varsa)
-                // git 'https://github.com/kullanici/proje.git'
-                echo 'Kodlar çekiliyor...'
+                script {
+                    // Windows'tan Linux'a gelince dosya izni kaybolur, onu düzeltiyoruz
+                    sh 'chmod +x mvnw'
+                    // Linux olduğu için sh kullanıyoruz
+                    sh './mvnw clean test'
+                }
             }
         }
 
-        stage('Test') {
+        stage('Deploy') {
             steps {
-                // Maven ile testleri çalıştır
-                sh 'mvn test'
+                echo 'Deploy ediliyor...'
             }
         }
     }
 
     post {
-        always {
-            // Test raporlarını JUnit formatında kaydet
-            junit '**/target/surefire-reports/*.xml'
+        success {
+            echo 'Başarılı'
+        }
+        failure {
+            echo 'Başarısız'
         }
     }
 }
